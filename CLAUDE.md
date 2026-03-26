@@ -16,13 +16,24 @@
 
 ```
 src/
-  App.jsx       # Main component — all app logic lives here
-  App.css       # Component styles
-  main.jsx      # React entry point
-  index.css     # Global styles
+  App.jsx              # Root component — holds transactions state, wires components
+  Summary.jsx          # Displays income, expenses, balance (calculates from transactions)
+  TransactionForm.jsx  # Form to add a new transaction (owns its own form state)
+  TransactionList.jsx  # Filterable table of transactions (owns filter state)
+  App.css              # Component styles
+  main.jsx             # React entry point
+  index.css            # Global styles
 index.html
 vite.config.js
 ```
+
+## Architecture
+
+- **State ownership**: `transactions` array lives in `App` and is passed down as props
+- **TransactionForm** manages its own local form state (`description`, `amount`, `type`, `category`) and calls `onAdd(transaction)` when submitted
+- **TransactionList** manages its own local filter state (`filterType`, `filterCategory`) and receives `transactions` as a prop
+- **Summary** receives `transactions` and computes `totalIncome`, `totalExpenses`, and `balance` internally
+- `categories` is defined locally in both `TransactionForm` and `TransactionList` (not yet shared)
 
 ## Common Commands
 
@@ -35,10 +46,9 @@ npm run lint      # Run ESLint
 
 ## Key Concepts
 
-- **Transactions** have: `id`, `description`, `amount` (string), `type` (`"income"` | `"expense"`), `category`, `date`
+- **Transactions** have: `id`, `description`, `amount` (number), `type` (`"income"` | `"expense"`), `category`, `date`
 - **Categories**: food, housing, utilities, transport, entertainment, salary, other
 - Filtering is done client-side by type and category
-- Amounts are stored as strings — be careful with arithmetic (parseFloat needed)
 
 ## Notes
 
